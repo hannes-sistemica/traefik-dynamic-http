@@ -148,4 +148,21 @@ This is an experimental project focused on:
 3. Developing patterns for webhook autodiscovery
 4. Creating maintainable API structures
 
+## N8N Integration, first thoughts
+
+```
+# Let's get all workflow IDs and names, and create a file for each
+curl -X GET "https://n8n.company.com/api/v1/workflows" \
+-H "X-N8N-API-KEY: eyJhbGciOxxx.yyy" | jq -r '.data[] | "\(.id) \(.name)"' | while read -r id name; do
+    # Clean the filename (replace spaces and special chars)
+    clean_name=$(echo "$name" | tr ' ' '_' | tr -cd '[:alnum:]_-')
+
+    # Download each workflow into a separate JSON file
+    curl -X GET "https://n8n.company.com/api/v1/workflows/$id" \
+    -H "X-N8N-API-KEY: eyJhbGciOxxx.yyy" | jq '.' > "workflow_${clean_name}.json"
+
+    echo "Downloaded: workflow_${clean_name}.json"
+done
+```
+
 Feedback and contributions are welcome as we explore this approach to webhook management and API design.
