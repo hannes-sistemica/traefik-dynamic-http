@@ -9,19 +9,19 @@
         },
         "service2-router": {
           "entryPoints": ["web"],
-          "rule": "Host(`example.com`) && PathPrefix(`/service2`) && Method(`POST`)",
+          "rule": "Host(`example.com`) && PathPrefix(`/service2`) && Method(`GET`)",
           "service": "service2",
           "middlewares": ["strip-service2", "header-middleware"]
         },
         "alpha-router": {
           "entryPoints": ["web"],
-          "rule": "Host(`foo.local`) && PathPrefix(`/alpha`)",
+          "rule": "Host(`foo.local`) && PathPrefix(`/alpha`) && Method(`GET`)",
           "service": "alphaService",
           "middlewares": ["strip-alpha", "header-middleware"]
         },
         "beta-router": {
           "entryPoints": ["web"],
-          "rule": "Host(`bar.local`) && PathPrefix(`/beta`)",
+          "rule": "Host(`bar.local`) && PathPrefix(`/beta`) && Method(`GET`)",
           "service": "betaService",
           "middlewares": ["strip-beta", "header-middleware"]
         },
@@ -35,47 +35,69 @@
       "services": {
         "service1": {
           "loadBalancer": {
-            "servers": [ { "url": "http://service1:80" } ]
+            "servers": [
+              { "url": "http://service1:80" }
+            ]
           }
         },
         "service2": {
           "loadBalancer": {
-            "servers": [ { "url": "http://service2:80" } ]
+            "servers": [
+              { "url": "http://service2:80" }
+            ]
           }
         },
         "alphaService": {
           "loadBalancer": {
-            "servers": [ { "url": "http://service3:80" } ]
+            "servers": [
+              { "url": "http://service3:80" }
+            ]
           }
         },
         "betaService": {
           "loadBalancer": {
-            "servers": [ { "url": "http://service4:80" } ]
+            "servers": [
+              { "url": "http://service4:80" }
+            ]
           }
         }
       },
       "middlewares": {
         "header-middleware": {
           "headers": {
-            "customRequestHeaders": { "X-Test-Request": "HeaderValue" },
-            "customResponseHeaders": { "X-Test-Response": "HeaderValue" }
+            "customRequestHeaders": {
+              "X-Test-Request": "HeaderValue"
+            },
+            "customResponseHeaders": {
+              "X-Test-Response": "HeaderValue"
+            }
           }
         },
         "strip-service1": {
-          "stripPrefix": { "prefixes": ["/service1"] }
+          "stripPrefix": {
+            "prefixes": ["/service1/"]
+          }
         },
         "strip-service2": {
-          "stripPrefix": { "prefixes": ["/service2"] }
+          "stripPrefix": {
+            "prefixes": ["/service2"]
+          }
         },
         "strip-alpha": {
-          "stripPrefix": { "prefixes": ["/alpha"] }
+          "stripPrefix": {
+            "prefixes": ["/alpha"]
+          }
         },
         "strip-beta": {
-          "stripPrefix": { "prefixes": ["/beta"] }
+          "stripPrefix": {
+            "prefixes": ["/beta"]
+          }
         },
         "dashboard-auth": {
           "basicAuth": {
-            "users": [ "admin:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/" ]
+            "users": [
+              "admin:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/"
+            ]
           }
         }
       }

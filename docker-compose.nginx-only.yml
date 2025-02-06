@@ -6,8 +6,8 @@ services:
       - --entryPoints.web.address=:80
       - --api.insecure=true
     ports:
-      - "8081:80"       # Traefik listens on container port 80 mapped to host 8081
-      - "8080:8080"     # Traefik dashboard
+      - "8081:80"       # Incoming HTTP traffic
+      - "8080:8080"   # For Traefik dashboard (if needed)
     depends_on:
       - configserver
     networks:
@@ -17,34 +17,36 @@ services:
     image: nginx:alpine
     volumes:
       - ./config:/usr/share/nginx/html:ro
+    # No ports mapping is needed because Traefik will use the internal Docker network to access this service.
     networks:
       - traefik-net
 
+
   service1:
-    image: openresty/openresty:alpine
+    image: nginx:alpine
     volumes:
-      - ./services/1/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+      - ./services/1:/usr/share/nginx/html:ro
     networks:
       - traefik-net
 
   service2:
-    image: openresty/openresty:alpine
+    image: nginx:alpine
     volumes:
-      - ./services/2/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+      - ./services/2:/usr/share/nginx/html:ro
     networks:
       - traefik-net
 
   service3:
-    image: openresty/openresty:alpine
+    image: nginx:alpine
     volumes:
-      - ./services/3/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+      - ./services/3:/usr/share/nginx/html:ro
     networks:
       - traefik-net
 
   service4:
-    image: openresty/openresty:alpine
+    image: nginx:alpine
     volumes:
-      - ./services/4/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+      - ./services/4:/usr/share/nginx/html:ro
     networks:
       - traefik-net
 
