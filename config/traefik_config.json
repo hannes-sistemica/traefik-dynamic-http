@@ -3,9 +3,9 @@
       "routers": {
         "service1-router": {
           "entryPoints": ["web"],
-          "rule": "Host(`example.com`) && PathPrefix(`/service1`) && Method(`GET`)",
+          "rule": "Host(`example.com`) && PathPrefix(`/service1/test`) && Method(`GET`)",
           "service": "service1",
-          "middlewares": ["strip-service1", "header-middleware"]
+          "middlewares": ["rewrite-service1", "header-middleware"]
         },
         "service2-router": {
           "entryPoints": ["web"],
@@ -61,8 +61,13 @@
             "customResponseHeaders": { "X-Test-Response": "HeaderValue" }
           }
         },
+        "rewrite-service1": {
+            "replacePath": {
+              "path": "/internal-ugly-url-12345ffd"
+            }
+        },
         "strip-service1": {
-          "stripPrefix": { "prefixes": ["/service1"] }
+          "stripPrefix": { "prefixes": ["/service1/test"] }
         },
         "strip-service2": {
           "stripPrefix": { "prefixes": ["/service2"] }
